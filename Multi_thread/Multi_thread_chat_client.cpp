@@ -15,19 +15,19 @@ int main() {
     pthread_t tid;
     char message[BUFFER_SIZE];
 
-    // ¼ÒÄÏ »ı¼º
+    // ì†Œì¼“ ìƒì„±
     client_socket = socket(AF_INET, SOCK_STREAM, 0);
     if (client_socket == -1) {
         perror("socket error");
         exit(1);
     }
 
-    // ¼­¹ö ÁÖ¼Ò ¼³Á¤
+    // ì„œë²„ ì£¼ì†Œ ì„¤ì •
     server_addr.sin_family = AF_INET;
-    server_addr.sin_addr.s_addr = inet_addr("127.0.0.1");  // ·ÎÄÃ ¼­¹ö
-    server_addr.sin_port = htons(9000);  // ¼­¹öÀÇ Æ÷Æ® ¹øÈ£ 9000
+    server_addr.sin_addr.s_addr = inet_addr("127.0.0.1");  // ë¡œì»¬ ì„œë²„
+    server_addr.sin_port = htons(9000);  // ì„œë²„ì˜ í¬íŠ¸ ë²ˆí˜¸ 9000
 
-    // ¼­¹ö¿¡ ¿¬°á
+    // ì„œë²„ì— ì—°ê²°
     if (connect(client_socket, (struct sockaddr*)&server_addr, sizeof(server_addr)) == -1) {
         perror("connect error");
         exit(1);
@@ -35,14 +35,14 @@ int main() {
 
     printf("Entered Chatroom.\n");
 
-    // ¸Ş½ÃÁö ¼ö½Å ½º·¹µå »ı¼º
+    // ë©”ì‹œì§€ ìˆ˜ì‹  ìŠ¤ë ˆë“œ ìƒì„±
     pthread_create(&tid, NULL, receive_messages, (void*)&client_socket);
 
-    // ¸Ş½ÃÁö ÀÔ·Â ¹× Àü¼Û
+    // ë©”ì‹œì§€ ì…ë ¥ ë° ì „ì†¡
     while (1) {
         fgets(message, BUFFER_SIZE, stdin);
 
-        // "/quit" ÀÔ·Â ½Ã ¿¬°á Á¾·á
+        // "/quit" ì…ë ¥ ì‹œ ì—°ê²° ì¢…ë£Œ
         if (strncmp(message, "/quit", 5) == 0) {
             printf("Disconnecting from the server...\n");
             break;
@@ -51,7 +51,7 @@ int main() {
         send(client_socket, message, strlen(message), 0);
     }
 
-    // ¿¬°á Á¾·á
+    // ì—°ê²° ì¢…ë£Œ
     close(client_socket);
     printf("Disconnected.\n");
 
@@ -59,17 +59,17 @@ int main() {
 }
 
 void* receive_messages(void* arg) {
-    //¼ÒÄÏ ¹Ş¾Æ¿À±â
+    //ì†Œì¼“ ë°›ì•„ì˜¤ê¸°
     int client_socket = *((int*)arg);
 
-    //¹öÆÛ ¼±¾ğ
+    //ë²„í¼ ì„ ì–¸
     char buffer[BUFFER_SIZE];
 
-    //¹ŞÀ» ¹ÙÀÌÆ® ¼ö ÀúÀå º¯¼ö
+    //ë°›ì„ ë°”ì´íŠ¸ ìˆ˜ ì €ì¥ ë³€ìˆ˜
     int bytes_received;
 
     while ((bytes_received = recv(client_socket, buffer, sizeof(buffer), 0)) > 0) {
-        buffer[bytes_received] = '\0'; //¹®ÀÚ¿­ Á¤»ó Á¾·á À§ÇØ
+        buffer[bytes_received] = '\0'; //ë¬¸ìì—´ ì •ìƒ ì¢…ë£Œ ìœ„í•´
         printf("%s", buffer);
     }
 
