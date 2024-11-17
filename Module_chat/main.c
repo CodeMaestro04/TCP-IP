@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include "log_module.h"
-#include "user_module.h"  // ¼öÁ¤: user_module.h¸¦ Æ÷ÇÔÇÏ¿© ÇÔ¼ö ¼±¾ğÀ» ÀÎ½ÄÇÏ°Ô ÇÔ
+#include "user_module.h"  // ìˆ˜ì •: user_module.hë¥¼ í¬í•¨í•˜ì—¬ í•¨ìˆ˜ ì„ ì–¸ì„ ì¸ì‹í•˜ê²Œ í•¨
 #include "socket_module.h"
 
 #define MAXBUF 1024
@@ -15,21 +15,21 @@ void handle_client(int clnt_sock) {
     char user_pw[MAX_PW_LEN];
     int is_logged_in = 0;
 
-    const char* service_message = "»ç¿ëÇÒ ¼­ºñ½º¸¦ ¼±ÅÃÇÏ¼¼¿ä.\n1. È¸¿ø°¡ÀÔ\n2. ·Î±×ÀÎ\n99. Á¾·á\n";
-    const char* signup_ID_message = "È¸¿ø°¡ÀÔÇÒ ¾ÆÀÌµğ¸¦ ÀÔ·ÂÇÏ½Ã¿À: ";
-    const char* invalid_id_msg = "À¯È¿ÇÏÁö ¾ÊÀº IDÀÔ´Ï´Ù. ´Ù½Ã ÀÔ·ÂÇÏ¼¼¿ä.\n";
-    const char* id_in_use_msg = "ÀÌ¹Ì »ç¿ëÁßÀÎ IDÀÔ´Ï´Ù. ´Ù½Ã ÀÔ·ÂÇÏ¼¼¿ä.\n";
-    const char* valid_id_msg = "»ç¿ë °¡´ÉÇÑ IDÀÔ´Ï´Ù. ÆĞ½º¿öµå¸¦ ÀÔ·ÂÇÏ¼¼¿ä: ";
-    const char* invalid_pw_msg = "PW´Â ´ë¹®ÀÚ, ¼ıÀÚ, Æ¯¼ö¹®ÀÚ¸¦ Æ÷ÇÔÇØ¾ß ÇÏ¸ç 8ÀÚ¸® ÀÌ»óÀÌ¾î¾ß ÇÕ´Ï´Ù.\n";
-    const char* register_success_msg = "È¸¿ø°¡ÀÔÀÌ ¿Ï·áµÇ¾ú½À´Ï´Ù.\n";
-    const char* login_ID_message = "¾ÆÀÌµğ¸¦ ÀÔ·ÂÇÏ¼¼¿ä: ";
-    const char* id_not_found_msg = "µî·ÏµÇÁö ¾ÊÀº IDÀÔ´Ï´Ù. ´Ù½Ã ÀÔ·ÂÇÏ¼¼¿ä.\n";
-    const char* id_valid_msg = "ID°¡ È®ÀÎµÇ¾ú½À´Ï´Ù. ÆĞ½º¿öµå¸¦ ÀÔ·ÂÇÏ¼¼¿ä: ";
-    const char* login_fail_msg = "Àß¸øµÈ PWÀÔ´Ï´Ù. ´Ù½Ã ½ÃµµÇÏ¼¼¿ä.\n";
-    const char* max_attempt_msg = "5È¸ ½ÇÆĞÇÏ¿´½À´Ï´Ù. ¿¬°áÀÌ Á¾·áµË´Ï´Ù.\n";
-    const char* login_success_msg = "·Î±×ÀÎ¿¡ ¼º°øÇÏ¿´½À´Ï´Ù.\n";
-    const char* logout_message = "·Î±×¾Æ¿ô µÇ¾ú½À´Ï´Ù.\n";
-    const char* end_message = "¿¬°áÀÌ Á¾·áµÇ¾ú½À´Ï´Ù.\n";
+    const char* service_message = "ì‚¬ìš©í•  ì„œë¹„ìŠ¤ë¥¼ ì„ íƒí•˜ì„¸ìš”.\n1. íšŒì›ê°€ì…\n2. ë¡œê·¸ì¸\n99. ì¢…ë£Œ\n";
+    const char* signup_ID_message = "íšŒì›ê°€ì…í•  ì•„ì´ë””ë¥¼ ì…ë ¥í•˜ì‹œì˜¤: ";
+    const char* invalid_id_msg = "ìœ íš¨í•˜ì§€ ì•Šì€ IDì…ë‹ˆë‹¤. ë‹¤ì‹œ ì…ë ¥í•˜ì„¸ìš”.\n";
+    const char* id_in_use_msg = "ì´ë¯¸ ì‚¬ìš©ì¤‘ì¸ IDì…ë‹ˆë‹¤. ë‹¤ì‹œ ì…ë ¥í•˜ì„¸ìš”.\n";
+    const char* valid_id_msg = "ì‚¬ìš© ê°€ëŠ¥í•œ IDì…ë‹ˆë‹¤. íŒ¨ìŠ¤ì›Œë“œë¥¼ ì…ë ¥í•˜ì„¸ìš”: ";
+    const char* invalid_pw_msg = "PWëŠ” ëŒ€ë¬¸ì, ìˆ«ì, íŠ¹ìˆ˜ë¬¸ìë¥¼ í¬í•¨í•´ì•¼ í•˜ë©° 8ìë¦¬ ì´ìƒì´ì–´ì•¼ í•©ë‹ˆë‹¤.\n";
+    const char* register_success_msg = "íšŒì›ê°€ì…ì´ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤.\n";
+    const char* login_ID_message = "ì•„ì´ë””ë¥¼ ì…ë ¥í•˜ì„¸ìš”: ";
+    const char* id_not_found_msg = "ë“±ë¡ë˜ì§€ ì•Šì€ IDì…ë‹ˆë‹¤. ë‹¤ì‹œ ì…ë ¥í•˜ì„¸ìš”.\n";
+    const char* id_valid_msg = "IDê°€ í™•ì¸ë˜ì—ˆìŠµë‹ˆë‹¤. íŒ¨ìŠ¤ì›Œë“œë¥¼ ì…ë ¥í•˜ì„¸ìš”: ";
+    const char* login_fail_msg = "ì˜ëª»ëœ PWì…ë‹ˆë‹¤. ë‹¤ì‹œ ì‹œë„í•˜ì„¸ìš”.\n";
+    const char* max_attempt_msg = "5íšŒ ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤. ì—°ê²°ì´ ì¢…ë£Œë©ë‹ˆë‹¤.\n";
+    const char* login_success_msg = "ë¡œê·¸ì¸ì— ì„±ê³µí•˜ì˜€ìŠµë‹ˆë‹¤.\n";
+    const char* logout_message = "ë¡œê·¸ì•„ì›ƒ ë˜ì—ˆìŠµë‹ˆë‹¤.\n";
+    const char* end_message = "ì—°ê²°ì´ ì¢…ë£Œë˜ì—ˆìŠµë‹ˆë‹¤.\n";
 
     int attempt = 0;
 
@@ -39,12 +39,12 @@ void handle_client(int clnt_sock) {
         memset(buf, 0x00, MAXBUF);
         ssize_t n = read(clnt_sock, buf, MAXBUF - 1);
         if (n <= 0) {
-            printf("Å¬¶óÀÌ¾ğÆ®°¡ ¿¬°áÀ» Á¾·áÇß½À´Ï´Ù.\n");
+            printf("í´ë¼ì´ì–¸íŠ¸ê°€ ì—°ê²°ì„ ì¢…ë£Œí–ˆìŠµë‹ˆë‹¤.\n");
             break;
         }
         buf[n] = '\0';
 
-        if (strncmp(buf, "1", 1) == 0) { // È¸¿ø°¡ÀÔ
+        if (strncmp(buf, "1", 1) == 0) { // íšŒì›ê°€ì…
             write(clnt_sock, signup_ID_message, strlen(signup_ID_message));
             read(clnt_sock, user_id, MAX_ID_LEN);
             if (!is_valid_id(user_id)) {
@@ -66,9 +66,9 @@ void handle_client(int clnt_sock) {
             log_user("server_DB.txt", user_id, user_pw);
             write(clnt_sock, register_success_msg, strlen(register_success_msg));
         }
-        else if (strncmp(buf, "2", 1) == 0) { // ·Î±×ÀÎ
+        else if (strncmp(buf, "2", 1) == 0) { // ë¡œê·¸ì¸
             if (is_logged_in) {
-                write(clnt_sock, "ÀÌ¹Ì ·Î±×ÀÎµÇ¾î ÀÖ½À´Ï´Ù.\n", strlen("ÀÌ¹Ì ·Î±×ÀÎµÇ¾î ÀÖ½À´Ï´Ù.\n"));
+                write(clnt_sock, "ì´ë¯¸ ë¡œê·¸ì¸ë˜ì–´ ìˆìŠµë‹ˆë‹¤.\n", strlen("ì´ë¯¸ ë¡œê·¸ì¸ë˜ì–´ ìˆìŠµë‹ˆë‹¤.\n"));
                 continue;
             }
 
@@ -99,20 +99,20 @@ void handle_client(int clnt_sock) {
             is_logged_in = 1;
             write(clnt_sock, login_success_msg, strlen(login_success_msg));
         }
-        else if (strncmp(buf, "99", 2) == 0) { // ·Î±×¾Æ¿ô
+        else if (strncmp(buf, "99", 2) == 0) { // ë¡œê·¸ì•„ì›ƒ
             if (is_logged_in) {
                 is_logged_in = 0;
                 write(clnt_sock, logout_message, strlen(logout_message));
             }
             else {
-                write(clnt_sock, "·Î±×ÀÎµÈ »óÅÂ°¡ ¾Æ´Õ´Ï´Ù.\n", strlen("·Î±×ÀÎµÈ »óÅÂ°¡ ¾Æ´Õ´Ï´Ù.\n"));
+                write(clnt_sock, "ë¡œê·¸ì¸ëœ ìƒíƒœê°€ ì•„ë‹™ë‹ˆë‹¤.\n", strlen("ë¡œê·¸ì¸ëœ ìƒíƒœê°€ ì•„ë‹™ë‹ˆë‹¤.\n"));
             }
             write(clnt_sock, end_message, strlen(end_message));
             close(clnt_sock);
             break;
         }
         else {
-            write(clnt_sock, "À¯È¿ÇÏÁö ¾ÊÀº ¿É¼ÇÀÔ´Ï´Ù.\n", strlen("À¯È¿ÇÏÁö ¾ÊÀº ¿É¼ÇÀÔ´Ï´Ù.\n"));
+            write(clnt_sock, "ìœ íš¨í•˜ì§€ ì•Šì€ ì˜µì…˜ì…ë‹ˆë‹¤.\n", strlen("ìœ íš¨í•˜ì§€ ì•Šì€ ì˜µì…˜ì…ë‹ˆë‹¤.\n"));
         }
     }
 }
