@@ -1,0 +1,36 @@
+# Makefile for the server program using modules
+
+# Compiler
+CC = gcc
+
+# Compiler flags
+CFLAGS = -Wall -g
+
+# Output executable name
+TARGET = server_app
+
+# Source files
+SRCS = main.c log_module.c user_module.c socket_module.c
+
+# Object files (replace .c with .o)
+OBJS = $(SRCS:.c=.o)
+
+# Header files
+HEADERS = log_module.h user_module.h socket_module.h
+
+# Default target
+all: $(TARGET)
+
+# Rule to link object files and create the executable
+$(TARGET): $(OBJS)
+	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS)
+
+# Rule to compile each source file into an object file
+%.o: %.c $(HEADERS)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Clean up object files and the executable
+clean:
+	rm -f $(OBJS) $(TARGET)
+
+.PHONY: all clean
