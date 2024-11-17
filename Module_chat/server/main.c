@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include "log_module.h"
-#include "user_module.h"  // 수정: user_module.h를 포함하여 함수 선언을 인식하게 함
+#include "user_module.h"  
 #include "socket_module.h"
 
 #define MAXBUF 1024
