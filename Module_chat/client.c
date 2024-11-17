@@ -25,11 +25,11 @@ int main(int argc, char* argv[]) {
     }
 
     char buf[MAXBUF];
-    printf("¼­¹ö¿¡ ¿¬°áµÇ¾ú½À´Ï´Ù.\n");
+    printf("ì„œë²„ì— ì—°ê²°ë˜ì—ˆìŠµë‹ˆë‹¤.\n");
 
     while (1) {
         memset(buf, 0x00, MAXBUF);
-        printf("»ç¿ëÇÒ ¼­ºñ½º¸¦ ¼±ÅÃÇÏ¼¼¿ä (1. È¸¿ø°¡ÀÔ, 2. ·Î±×ÀÎ, 99. ·Î±×¾Æ¿ô): ");
+        printf("ì‚¬ìš©í•  ì„œë¹„ìŠ¤ë¥¼ ì„ íƒí•˜ì„¸ìš” (1. íšŒì›ê°€ì…, 2. ë¡œê·¸ì¸, 99. ë¡œê·¸ì•„ì›ƒ): ");
         fgets(buf, MAXBUF, stdin);
         buf[strcspn(buf, "\n")] = 0;
 
@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
         memset(buf, 0x00, MAXBUF);
         ssize_t n = read(clnt_sock, buf, MAXBUF - 1);
         if (n <= 0) {
-            printf("¼­¹ö°¡ ¿¬°áÀ» Á¾·áÇß½À´Ï´Ù.\n");
+            printf("ì„œë²„ê°€ ì—°ê²°ì„ ì¢…ë£Œí–ˆìŠµë‹ˆë‹¤.\n");
             break;
         }
         buf[n] = '\0';
